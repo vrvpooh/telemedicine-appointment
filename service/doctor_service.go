@@ -5,20 +5,18 @@ import (
 	"telemedicine-api/repository"
 )
 
-// business logic
-func GetDoctors() []model.Doctor {
-	doctors := repository.GetAllDoctors()
-
-	// ตัวอย่าง logic (เพิ่มได้ภายหลัง)
-	// เช่น filter, sort, validation
-
-	return doctors
+type DoctorService struct {
+	Repo *repository.DoctorRepository
 }
 
-func GetDoctorByID(id string) (*model.Doctor, bool) {
-	return repository.GetDoctorByID(id)
+func (s *DoctorService) GetDoctors() ([]model.Doctor, error) {
+	return s.Repo.GetAll()
 }
 
-func GetSpecialties() []model.Specialty {
-	return repository.GetAllSpecialties()
+func (s *DoctorService) GetDoctorByID(id string) (*model.Doctor, error) {
+	return s.Repo.GetByID(id)
+}
+
+func (s *DoctorService) GetSpecialties() ([]model.Specialty, error) {
+	return s.Repo.GetSpecialties()
 }

@@ -1,34 +1,64 @@
 package repository
 
-import "telemedicine-api/model"
+import (
+	"telemedicine-api/config"
+	"telemedicine-api/model"
+)
 
-//mock data
-var doctors = []model.Doctor{
-	{ID: "1", Name: "Dr. Smith", Specialty: "Cardiology"},
-	{ID: "2", Name: "Dr. John", Specialty: "Dermatology"},
-	{ID: "3", Name: "Dr. Lee", Specialty: "Neurology"},
-}
+type DoctorRepository struct{}
 
-// ดึง doctor ทั้งหมด
-func GetAllDoctors() []model.Doctor {
-	return doctors
-}
+// GET all doctors
+func (r *DoctorRepository) GetAll() ([]model.Doctor, error) {
+	rows, err := config.DB.Query("SELECT id, name, specialty FROM doctors")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 
-// ดึง doctor ตาม id
-func GetDoctorByID(id string) (*model.Doctor, bool) {
-	for _, d := range doctors {
-		if d.ID == id {
-			return &d, true
+	var doctors []model.Doctor
+
+	for rows.Next() {
+		var d model.Doctor
+		if err := rows.Scan(&d.ID, &d.Name, &d.Specialty); err != nil {
+			return nil, err
 		}
+		doctors = append(doctors, d)
 	}
-	return nil, false
+
+	return doctors, nil
 }
 
-// ดึง specialties ทั้งหมด
-func GetAllSpecialties() []model.Specialty {
-	return []model.Specialty{
-		{Name: "Cardiology"},
-		{Name: "Dermatology"},
-		{Name: "Neurology"},
+// GET doctor by ID
+func (r *DoctorRepository) GetByID(id string) (*model.Doctor, error) {
+	row := config.DB.QueryRow(
+		"SELECT id, name, specialty FROM doctors WHERE id = ?", id,
+	)
+
+	var d model.Doctor
+	if err := row.Scan(&d.ID, &d.Name, &d.Specialty); err != nil {
+		return nil, err
 	}
+
+	return &d, nil
+}
+
+// GET specialties
+func (r *DoctorRepository) GetSpecialties() ([]model.Specialty, error) {
+	rows, err := config.DB.Query("SELECT DISTINCT specialty FROM doctors")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var specialties []model.Specialty
+
+	for rows.Next() {
+		var s model.Specialty
+		if err := rows.Scan(&s.Name); err != nil {
+			return nil, err
+		}
+		specialties = append(specialties, s)
+	}
+
+	return specialties, nil
 }
