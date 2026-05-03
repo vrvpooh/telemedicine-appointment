@@ -15,7 +15,9 @@ func ConnectDatabase() {
 		log.Fatal("เปิด database ไม่ได้:", err)
 	}
 
-	// 	ให้เพื่อนๆเพิ่ม database ต่อตรงนี้เลยนะ ว่าตัวเองต้องใช้อะไรกันบ้าง
+	// ให้เพื่อนๆเพิ่ม database ต่อตรงนี้เลยนะ ว่าตัวเองต้องใช้อะไรกันบ้าง
+
+  // slot (ten)
 	schema := `
 	CREATE TABLE IF NOT EXISTS slots (
 		id         INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,11 +27,11 @@ func ConnectDatabase() {
 		is_booked  INTEGER NOT NULL DEFAULT 0
 	);
 	`
-
 	if _, err := db.Exec(schema); err != nil {
 		log.Fatal("สร้างตาราง slots ไม่สำเร็จ:", err)
 	}
 
+  // doctor (pooh)
 	schemaDoctors := `
 	CREATE TABLE IF NOT EXISTS doctors (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,7 +42,6 @@ func ConnectDatabase() {
 		rating REAL
 	);
 	`
-
 	if _, err := db.Exec(schemaDoctors); err != nil {
 		log.Fatal("สร้างตาราง doctors ไม่สำเร็จ:", err)
 	}
@@ -58,7 +59,6 @@ func ConnectDatabase() {
 	SELECT 'Dr. Lee', 'Psychiatry', 'Chulalongkorn University', 8, 4.7
 	WHERE NOT EXISTS (SELECT 1 FROM doctors WHERE name='Dr. Lee');
 	`
-
 	if _, err := db.Exec(insertMockDoctors); err != nil {
 		log.Println("insert mock data error:", err)
 	}
