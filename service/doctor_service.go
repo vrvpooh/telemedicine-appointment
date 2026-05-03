@@ -5,7 +5,7 @@ import (
 	"telemedicine-api/repository"
 )
 
-// business logic อยู่ตรงนี้
+// business logic
 func GetDoctors() []model.Doctor {
 	doctors := repository.GetAllDoctors()
 
@@ -13,4 +13,8 @@ func GetDoctors() []model.Doctor {
 	// เช่น filter, sort, validation
 
 	return doctors
+}
+
+func GetDoctorByID(id string) (*model.Doctor, bool) {
+	return repository.GetDoctorByID(id)
 }

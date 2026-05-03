@@ -13,3 +13,13 @@ var doctors = []model.Doctor{
 func GetAllDoctors() []model.Doctor {
 	return doctors
 }
+
+// ดึง doctor ตาม id
+func GetDoctorByID(id string) (*model.Doctor, bool) {
+	for _, d := range doctors {
+		if d.ID == id {
+			return &d, true
+		}
+	}
+	return nil, false
+}
