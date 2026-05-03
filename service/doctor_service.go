@@ -9,8 +9,8 @@ type DoctorService struct {
 	Repo *repository.DoctorRepository
 }
 
-func (s *DoctorService) GetDoctors() ([]model.Doctor, error) {
-	return s.Repo.GetAll()
+func (s *DoctorService) GetDoctors(name, specialty string) ([]model.Doctor, error) {
+	return s.Repo.GetAll(name, specialty)
 }
 
 func (s *DoctorService) GetDoctorByID(id string) (*model.Doctor, error) {

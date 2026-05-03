@@ -21,11 +21,15 @@ func SetupDoctorHandler(s *service.DoctorService) {
 
 // GET /api/doctors
 func GetDoctors(c *gin.Context) {
-	doctors, err := doctorHandler.Service.GetDoctors()
+	name := c.Query("name")
+	specialty := c.Query("specialty")
+
+	doctors, err := doctorHandler.Service.GetDoctors(name, specialty)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{"data": doctors})
 }
 

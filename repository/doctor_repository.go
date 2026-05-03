@@ -8,8 +8,21 @@ import (
 type DoctorRepository struct{}
 
 // GET all doctors
-func (r *DoctorRepository) GetAll() ([]model.Doctor, error) {
-	rows, err := config.DB.Query("SELECT id, name, specialty FROM doctors")
+func (r *DoctorRepository) GetAll(name, specialty string) ([]model.Doctor, error) {
+	query := "SELECT id, name, specialty, education, experience, rating FROM doctors WHERE 1=1"
+	args := []interface{}{}
+
+	if name != "" {
+		query += " AND name LIKE ?"
+		args = append(args, "%"+name+"%")
+	}
+
+	if specialty != "" {
+		query += " AND specialty = ?"
+		args = append(args, specialty)
+	}
+
+	rows, err := config.DB.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -19,7 +32,8 @@ func (r *DoctorRepository) GetAll() ([]model.Doctor, error) {
 
 	for rows.Next() {
 		var d model.Doctor
-		if err := rows.Scan(&d.ID, &d.Name, &d.Specialty); err != nil {
+		err := rows.Scan(&d.ID, &d.Name, &d.Specialty, &d.Education, &d.Experience, &d.Rating)
+		if err != nil {
 			return nil, err
 		}
 		doctors = append(doctors, d)
@@ -31,11 +45,13 @@ func (r *DoctorRepository) GetAll() ([]model.Doctor, error) {
 // GET doctor by ID
 func (r *DoctorRepository) GetByID(id string) (*model.Doctor, error) {
 	row := config.DB.QueryRow(
-		"SELECT id, name, specialty FROM doctors WHERE id = ?", id,
+		`SELECT id, name, specialty, education, experience, rating 
+		 FROM doctors WHERE id = ?`, id,
 	)
 
 	var d model.Doctor
-	if err := row.Scan(&d.ID, &d.Name, &d.Specialty); err != nil {
+	err := row.Scan(&d.ID, &d.Name, &d.Specialty, &d.Education, &d.Experience, &d.Rating)
+	if err != nil {
 		return nil, err
 	}
 

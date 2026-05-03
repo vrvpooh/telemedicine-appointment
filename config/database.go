@@ -34,7 +34,10 @@ func ConnectDatabase() {
 	CREATE TABLE IF NOT EXISTS doctors (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT NOT NULL,
-		specialty TEXT NOT NULL
+		specialty TEXT NOT NULL,
+		education TEXT,
+		experience INTEGER,
+		rating REAL
 	);
 	`
 
@@ -43,16 +46,16 @@ func ConnectDatabase() {
 	}
 
 	insertMockDoctors := `
-	INSERT INTO doctors (name, specialty)
-	SELECT 'Dr. Smith', 'Cardiology'
-	WHERE NOT EXISTS (SELECT 1 FROM doctors);
+	INSERT INTO doctors (name, specialty, education, experience, rating)
+	SELECT 'Dr. Smith', 'Cardiology', 'Harvard Medical School', 10, 4.8
+	WHERE NOT EXISTS (SELECT 1 FROM doctors WHERE name='Dr. Smith');
 
-	INSERT INTO doctors (name, specialty)
-	SELECT 'Dr. John', 'Dermatology'
+	INSERT INTO doctors (name, specialty, education, experience, rating)
+	SELECT 'Dr. John', 'Dermatology', 'Stanford University', 5, 4.5
 	WHERE NOT EXISTS (SELECT 1 FROM doctors WHERE name='Dr. John');
 
-	INSERT INTO doctors (name, specialty)
-	SELECT 'Dr. Lee', 'Neurology'
+	INSERT INTO doctors (name, specialty, education, experience, rating)
+	SELECT 'Dr. Lee', 'Psychiatry', 'Chulalongkorn University', 8, 4.7
 	WHERE NOT EXISTS (SELECT 1 FROM doctors WHERE name='Dr. Lee');
 	`
 
