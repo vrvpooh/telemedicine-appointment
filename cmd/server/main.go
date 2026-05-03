@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	// เชื่อต่อกับ database
+	// เชื่อมต่อกับ database
 	config.ConnectDatabase()
 
 	// Setup Slot module
@@ -19,10 +19,17 @@ func main() {
 	slotService := &service.SlotService{Repo: slotRepo}
 	handler.SetupSlotHandler(slotService)
 
+	// Setup Doctor module
+	doctorRepo := &repository.DoctorRepository{}
+	doctorService := &service.DoctorService{Repo: doctorRepo}
+	handler.SetupDoctorHandler(doctorService)
+
 	// Gin
 	r := gin.Default()
 
+	// Register routes
 	route.RegisterSlotRoutes(r)
+	route.RegisterDoctorRoutes(r)
 
 	r.Run(":8080")
 }
