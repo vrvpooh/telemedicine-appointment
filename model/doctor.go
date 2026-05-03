@@ -5,3 +5,7 @@ type Doctor struct {
 	Name      string `json:"name"`
 	Specialty string `json:"specialty"`
 }
+
+type Specialty struct {
+	Name string `json:"name"`
+}

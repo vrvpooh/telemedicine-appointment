@@ -31,3 +31,11 @@ func GetDoctorByID(c *gin.Context) {
 		"data": doctor,
 	})
 }
+
+func GetSpecialties(c *gin.Context) {
+	specialties := service.GetSpecialties()
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": specialties,
+	})
+}

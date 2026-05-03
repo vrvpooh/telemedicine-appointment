@@ -11,4 +11,5 @@ func RegisterDoctorRoutes(r *gin.Engine) {
 
 	api.GET("/doctors", handler.GetDoctors)
 	api.GET("/doctors/:id", handler.GetDoctorByID)
+	api.GET("/specialties", handler.GetSpecialties)
 }

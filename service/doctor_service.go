@@ -18,3 +18,7 @@ func GetDoctors() []model.Doctor {
 func GetDoctorByID(id string) (*model.Doctor, bool) {
 	return repository.GetDoctorByID(id)
 }
+
+func GetSpecialties() []model.Specialty {
+	return repository.GetAllSpecialties()
+}

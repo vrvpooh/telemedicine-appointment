@@ -23,3 +23,12 @@ func GetDoctorByID(id string) (*model.Doctor, bool) {
 	}
 	return nil, false
 }
+
+// ดึง specialties ทั้งหมด
+func GetAllSpecialties() []model.Specialty {
+	return []model.Specialty{
+		{Name: "Cardiology"},
+		{Name: "Dermatology"},
+		{Name: "Neurology"},
+	}
+}
