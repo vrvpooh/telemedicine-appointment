@@ -17,7 +17,7 @@ func ConnectDatabase() {
 
 	// ให้เพื่อนๆเพิ่ม database ต่อตรงนี้เลยนะ ว่าตัวเองต้องใช้อะไรกันบ้าง
 
-  // slot (ten)
+	// slot (ten)
 	schema := `
 	CREATE TABLE IF NOT EXISTS slots (
 		id         INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,7 +31,7 @@ func ConnectDatabase() {
 		log.Fatal("สร้างตาราง slots ไม่สำเร็จ:", err)
 	}
 
-  // doctor (pooh)
+	// doctor (pooh)
 	schemaDoctors := `
 	CREATE TABLE IF NOT EXISTS doctors (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,7 +43,7 @@ func ConnectDatabase() {
 	);
 	`
 	// Notification & Feedback (Tum)
-    schemaExtra := `
+	schemaExtra := `
     CREATE TABLE IF NOT EXISTS notifications (
         id          INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id     INTEGER NOT NULL,
@@ -62,19 +62,19 @@ func ConnectDatabase() {
     );
     `
 	if _, err := db.Exec(schemaExtra); err != nil {
-        log.Fatal("สร้างตาราง Notification/Feedback ไม่สำเร็จ:", err)
-    }
+		log.Fatal("สร้างตาราง Notification/Feedback ไม่สำเร็จ:", err)
+	}
 
-    _, _ = db.Exec("ALTER TABLE doctors ADD COLUMN is_verified INTEGER DEFAULT 0;")
+	_, _ = db.Exec("ALTER TABLE doctors ADD COLUMN is_verified INTEGER DEFAULT 0;")
 
-    insertMockExtra := `
+	insertMockExtra := `
     INSERT INTO notifications (user_id, message) 
     SELECT 1, 'คุณมีการนัดหมายกับ Dr. Smith ในอีก 15 นาที'
     WHERE NOT EXISTS (SELECT 1 FROM notifications WHERE message LIKE '%Dr. Smith%');
     `
-    if _, err := db.Exec(insertMockExtra); err != nil {
-        log.Println("insert mock extra data error:", err)
-    }
+	if _, err := db.Exec(insertMockExtra); err != nil {
+		log.Println("insert mock extra data error:", err)
+	}
 
 	if _, err := db.Exec(schemaDoctors); err != nil {
 		log.Fatal("สร้างตาราง doctors ไม่สำเร็จ:", err)
@@ -95,6 +95,41 @@ func ConnectDatabase() {
 	`
 	if _, err := db.Exec(insertMockDoctors); err != nil {
 		log.Println("insert mock data error:", err)
+	}
+
+	// record (Pook)
+	schemaRecords := `
+	CREATE TABLE IF NOT EXISTS medical_records (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		appointment_id INTEGER NOT NULL,
+		patient_id INTEGER NOT NULL,
+		doctor_id INTEGER NOT NULL,
+		symptoms TEXT,
+		diagnosis TEXT,
+		prescription TEXT,
+		notes TEXT,
+		created_at TEXT NOT NULL
+	);
+	`
+	if _, err := db.Exec(schemaRecords); err != nil {
+		log.Fatal("สร้างตาราง medical_records ไม่สำเร็จ:", err)
+	}
+
+	insertMockRecords := `
+	INSERT INTO medical_records (appointment_id, patient_id, doctor_id, symptoms, diagnosis, prescription, notes, created_at)
+	SELECT 1, 101, 1, 'ปวดหัวตึบๆ มีไข้ 38 องศา', 'ไข้หวัดทั่วไป', 'Paracetamol 500mg กินทุก 4-6 ชั่วโมง', 'ดื่มน้ำอุ่นเยอะๆ และพักผ่อนให้เพียงพอ', '2026-05-01T10:00:00Z'
+	WHERE NOT EXISTS (SELECT 1 FROM medical_records WHERE appointment_id=1);
+
+	INSERT INTO medical_records (appointment_id, patient_id, doctor_id, symptoms, diagnosis, prescription, notes, created_at)
+	SELECT 2, 101, 2, 'มีผื่นแดงที่แขนและคันมาก', 'ภูมิแพ้ผิวหนัง', 'Loratadine 10mg วันละ 1 เม็ด, ยาทา TA Cream', 'หลีกเลี่ยงการเกาและงดอาหารทะเลชั่วคราว', '2026-05-03T14:30:00Z'
+	WHERE NOT EXISTS (SELECT 1 FROM medical_records WHERE appointment_id=2);
+
+	INSERT INTO medical_records (appointment_id, patient_id, doctor_id, symptoms, diagnosis, prescription, notes, created_at)
+	SELECT 3, 102, 1, 'เจ็บหน้าอกเวลาหายใจลึกๆ', 'กล้ามเนื้อหน้าอกอักเสบ', 'Ibuprofen 400mg หลังอาหารทันที', 'งดการยกของหนัก 1 สัปดาห์', '2026-05-04T09:15:00Z'
+	WHERE NOT EXISTS (SELECT 1 FROM medical_records WHERE appointment_id=3);
+	`
+	if _, err := db.Exec(insertMockRecords); err != nil {
+		log.Println("insert mock data (records) error:", err)
 	}
 
 	DB = db
