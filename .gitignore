@@ -1,9 +1,0 @@
-# Database 
-*.db
-*.sqlite
-*.sqlite3
-telemedicine.db
-
-# Environment files 
-.env
-.env.local
