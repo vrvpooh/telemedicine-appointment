@@ -25,15 +25,20 @@ func main() {
 	handler.SetupDoctorHandler(doctorService)
 
 	// Setup Notification
-    noteRepo := &repository.NotificationRepository{}
-    noteService := &service.NotificationService{Repo: noteRepo}
-    handler.SetupNotificationHandler(noteService)
+	noteRepo := &repository.NotificationRepository{}
+	noteService := &service.NotificationService{Repo: noteRepo}
+	handler.SetupNotificationHandler(noteService)
 
-    // Setup Feedback & Admin Verify
-    feedRepo := &repository.FeedbackRepository{}
-    feedService := &service.FeedbackService{Repo: feedRepo}
-    handler.SetupFeedbackHandler(feedService)
-	
+	// Setup Feedback & Admin Verify
+	feedRepo := &repository.FeedbackRepository{}
+	feedService := &service.FeedbackService{Repo: feedRepo}
+	handler.SetupFeedbackHandler(feedService)
+
+	// Setup Record module
+	recordRepo := &repository.RecordRepository{}
+	recordService := &service.RecordService{Repo: recordRepo}
+	handler.SetupRecordHandler(recordService)
+
 	// Gin
 	r := gin.Default()
 
@@ -41,6 +46,7 @@ func main() {
 	route.RegisterSlotRoutes(r)
 	route.RegisterDoctorRoutes(r)
 	route.RegisterNotificationRoutes(r)
+	route.RegisterRecordRoutes(r)
 
 	r.Run(":8080")
 }
