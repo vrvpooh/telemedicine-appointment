@@ -59,3 +59,23 @@ func (r *SlotRepository) DeleteByID(id string) (int64, error) {
 	}
 	return result.RowsAffected()
 }
+
+// GetByID - ดึงข้อมูล Slot ตาม ID เพื่อตรวจสอบก่อนจอง
+func (r *SlotRepository) GetByID(id uint) (model.Slot, error) {
+	query := `SELECT id, doctor_id, start_time, end_time, is_booked 
+              FROM slots WHERE id = ?`
+
+	var s model.Slot
+	err := config.DB.QueryRow(query, id).Scan(&s.ID, &s.DoctorID, &s.StartTime, &s.EndTime, &s.IsBooked)
+	if err != nil {
+		return s, err
+	}
+	return s, nil
+}
+
+// UpdateIsBooked - อัปเดตสถานะการจอง (ใช้ตอนจองสำเร็จ)
+func (r *SlotRepository) UpdateIsBooked(id uint, isBooked bool) error {
+	query := `UPDATE slots SET is_booked = ? WHERE id = ?`
+	_, err := config.DB.Exec(query, isBooked, id)
+	return err
+}

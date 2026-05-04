@@ -24,6 +24,11 @@ func main() {
 	doctorService := &service.DoctorService{Repo: doctorRepo}
 	handler.SetupDoctorHandler(doctorService)
 
+	// Setup Appointment module
+	appRepo := &repository.AppointmentRepository{}
+	appService := &service.AppointmentService{Repo: appRepo, SlotRepo: slotRepo}
+	handler.SetupAppointmentHandler(appService)
+
 	// Setup Notification
 	noteRepo := &repository.NotificationRepository{}
 	noteService := &service.NotificationService{Repo: noteRepo}
@@ -47,6 +52,7 @@ func main() {
 	route.RegisterDoctorRoutes(r)
 	route.RegisterNotificationRoutes(r)
 	route.RegisterRecordRoutes(r)
+	route.RegisterAppointmentRoutes(r)
 
 	r.Run(":8080")
 }
