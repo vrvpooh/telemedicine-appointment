@@ -42,6 +42,40 @@ func ConnectDatabase() {
 		rating REAL
 	);
 	`
+	// Notification & Feedback (Tum)
+    schemaExtra := `
+    CREATE TABLE IF NOT EXISTS notifications (
+        id          INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id     INTEGER NOT NULL,
+        message     TEXT NOT NULL,
+        is_read     INTEGER DEFAULT 0, -- 0=ยังไม่อ่าน, 1=อ่านแล้ว
+        created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS feedbacks (
+        id          INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id     INTEGER NOT NULL,
+        doctor_id   INTEGER NOT NULL,
+        rating      REAL NOT NULL,     -- คะแนน 1.0 - 5.0
+        comment     TEXT,
+        created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    `
+	if _, err := db.Exec(schemaExtra); err != nil {
+        log.Fatal("สร้างตาราง Notification/Feedback ไม่สำเร็จ:", err)
+    }
+
+    _, _ = db.Exec("ALTER TABLE doctors ADD COLUMN is_verified INTEGER DEFAULT 0;")
+
+    insertMockExtra := `
+    INSERT INTO notifications (user_id, message) 
+    SELECT 1, 'คุณมีการนัดหมายกับ Dr. Smith ในอีก 15 นาที'
+    WHERE NOT EXISTS (SELECT 1 FROM notifications WHERE message LIKE '%Dr. Smith%');
+    `
+    if _, err := db.Exec(insertMockExtra); err != nil {
+        log.Println("insert mock extra data error:", err)
+    }
+
 	if _, err := db.Exec(schemaDoctors); err != nil {
 		log.Fatal("สร้างตาราง doctors ไม่สำเร็จ:", err)
 	}
