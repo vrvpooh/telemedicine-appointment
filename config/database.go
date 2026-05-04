@@ -115,6 +115,21 @@ func ConnectDatabase() {
 		log.Fatal("สร้างตาราง medical_records ไม่สำเร็จ:", err)
 	}
 
+	// appointment (Money)
+	schemaAppointments := `
+    CREATE TABLE IF NOT EXISTS appointments (
+        id          INTEGER PRIMARY KEY AUTOINCREMENT,
+        patient_id  INTEGER NOT NULL,
+        slot_id     INTEGER NOT NULL,
+        status      TEXT DEFAULT 'pending',
+        zoom_token  TEXT,
+        created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    `
+	if _, err := db.Exec(schemaAppointments); err != nil {
+		log.Fatal("สร้างตาราง appointments ไม่สำเร็จ:", err)
+	}
+
 	insertMockRecords := `
 	INSERT INTO medical_records (appointment_id, patient_id, doctor_id, symptoms, diagnosis, prescription, notes, created_at)
 	SELECT 1, 101, 1, 'ปวดหัวตึบๆ มีไข้ 38 องศา', 'ไข้หวัดทั่วไป', 'Paracetamol 500mg กินทุก 4-6 ชั่วโมง', 'ดื่มน้ำอุ่นเยอะๆ และพักผ่อนให้เพียงพอ', '2026-05-01T10:00:00Z'
