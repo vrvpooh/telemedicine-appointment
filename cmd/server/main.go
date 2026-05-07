@@ -44,6 +44,11 @@ func main() {
 	recordService := &service.RecordService{Repo: recordRepo}
 	handler.SetupRecordHandler(recordService)
 
+	// Setup Auth module
+	authRepo := &repository.AuthRepository{}
+	authService := &service.AuthService{Repo: authRepo}
+	handler.SetupAuthHandler(authService)
+
 	// Gin
 	r := gin.Default()
 
@@ -53,6 +58,7 @@ func main() {
 	route.RegisterNotificationRoutes(r)
 	route.RegisterRecordRoutes(r)
 	route.RegisterAppointmentRoutes(r)
+	route.RegisterAuthRoutes(r)
 
 	r.Run(":8080")
 }
