@@ -6,7 +6,7 @@ import (
 )
 
 type DoctorService struct {
-	Repo *repository.DoctorRepository
+	Repo repository.DoctorRepositoryInterface
 }
 
 func (s *DoctorService) GetDoctors(name, specialty string) ([]model.Doctor, error) {

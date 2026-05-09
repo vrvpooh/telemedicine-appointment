@@ -5,6 +5,12 @@ import (
 	"telemedicine-api/model"
 )
 
+type DoctorRepositoryInterface interface {
+	GetAll(name, specialty string) ([]model.Doctor, error)
+	GetByID(id string) (*model.Doctor, error)
+	GetSpecialties() ([]model.Specialty, error)
+}
+
 type DoctorRepository struct{}
 
 // GET all doctors
