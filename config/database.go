@@ -134,7 +134,6 @@ func ConnectDatabase() {
 	// สร้าง Unique Index เพื่อป้องกันการจองซ้ำสำหรับตารางที่มีอยู่แล้ว
 	_, _ = db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_appointments_slot_id ON appointments(slot_id);")
 
-
 	// Ensure updated_at exists (in case table was created before the schema update)
 	if _, err := db.Exec("ALTER TABLE appointments ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP;"); err != nil {
 		log.Println("Note: ALTER TABLE appointments (updated_at) might have already run or failed:", err)
@@ -158,15 +157,15 @@ func ConnectDatabase() {
 
 	insertMockRecords := `
 	INSERT INTO medical_records (appointment_id, patient_id, doctor_id, symptoms, diagnosis, prescription, notes, created_at)
-	SELECT 1, 101, 1, 'ปวดหัวตึบๆ มีไข้ 38 องศา', 'ไข้หวัดทั่วไป', 'Paracetamol 500mg กินทุก 4-6 ชั่วโมง', 'ดื่มน้ำอุ่นเยอะๆ และพักผ่อนให้เพียงพอ', '2026-05-01T10:00:00Z'
+	SELECT 1, 101, 1, 'ปวดหัวตึบๆ มีไข้ 38 องศา', 'ไข้หวัดทั่วไป', 'Paracetamol 500mg กินทุก 4-6 ชั่วโมง', 'ดื่มน้ำอุ่นเยอะๆ และพักผ่อนให้เพียงพอ', '2026-05-01 10:00:00'
 	WHERE NOT EXISTS (SELECT 1 FROM medical_records WHERE appointment_id=1);
 
 	INSERT INTO medical_records (appointment_id, patient_id, doctor_id, symptoms, diagnosis, prescription, notes, created_at)
-	SELECT 2, 101, 2, 'มีผื่นแดงที่แขนและคันมาก', 'ภูมิแพ้ผิวหนัง', 'Loratadine 10mg วันละ 1 เม็ด, ยาทา TA Cream', 'หลีกเลี่ยงการเกาและงดอาหารทะเลชั่วคราว', '2026-05-03T14:30:00Z'
+	SELECT 2, 101, 2, 'มีผื่นแดงที่แขนและคันมาก', 'ภูมิแพ้ผิวหนัง', 'Loratadine 10mg วันละ 1 เม็ด, ยาทา TA Cream', 'หลีกเลี่ยงการเกาและงดอาหารทะเลชั่วคราว', '2026-05-03 14:30:00'
 	WHERE NOT EXISTS (SELECT 1 FROM medical_records WHERE appointment_id=2);
 
 	INSERT INTO medical_records (appointment_id, patient_id, doctor_id, symptoms, diagnosis, prescription, notes, created_at)
-	SELECT 3, 102, 1, 'เจ็บหน้าอกเวลาหายใจลึกๆ', 'กล้ามเนื้อหน้าอกอักเสบ', 'Ibuprofen 400mg หลังอาหารทันที', 'งดการยกของหนัก 1 สัปดาห์', '2026-05-04T09:15:00Z'
+	SELECT 3, 102, 1, 'เจ็บหน้าอกเวลาหายใจลึกๆ', 'กล้ามเนื้อหน้าอกอักเสบ', 'Ibuprofen 400mg หลังอาหารทันที', 'งดการยกของหนัก 1 สัปดาห์', '2026-05-04 09:15:00'
 	WHERE NOT EXISTS (SELECT 1 FROM medical_records WHERE appointment_id=3);
 	`
 	if _, err := db.Exec(insertMockRecords); err != nil {

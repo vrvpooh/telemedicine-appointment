@@ -38,7 +38,8 @@ func GetMyRecords(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch records"})
 		return
 	}
-	if records == nil {
+
+	if len(records) == 0 {
 		records = []model.MedicalRecord{} // ป้องกันไม่ให้ Return เป็น null
 	}
 	c.JSON(http.StatusOK, gin.H{"data": records})
@@ -57,7 +58,8 @@ func GetRecordByID(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
 		return
 	}
-	if record == nil {
+
+	if record == nil || record.PatientID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
 		return
 	}

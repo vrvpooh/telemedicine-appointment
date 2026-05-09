@@ -14,7 +14,7 @@ type DoctorHandler struct {
 
 var doctorHandler *DoctorHandler
 
-// setup handler (เหมือน slot)
+// setup handler
 func SetupDoctorHandler(s *service.DoctorService) {
 	doctorHandler = &DoctorHandler{Service: s}
 }
