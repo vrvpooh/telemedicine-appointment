@@ -45,6 +45,10 @@ func (r *DoctorRepository) GetAll(name, specialty string) ([]model.Doctor, error
 		doctors = append(doctors, d)
 	}
 
+	if doctors == nil {
+		doctors = []model.Doctor{}
+	}
+
 	return doctors, nil
 }
 
