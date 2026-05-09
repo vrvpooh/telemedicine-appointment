@@ -12,7 +12,7 @@ type RecordRepository struct{}
 func (r *RecordRepository) CreateRecord(rec *model.MedicalRecord) error {
 	query := `INSERT INTO medical_records (appointment_id, patient_id, doctor_id, symptoms, diagnosis, prescription, notes, created_at)
 	          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-	now := time.Now().Format(time.RFC3339)
+	now := time.Now().Format("2006-01-02 15:04:05")
 
 	result, err := config.DB.Exec(query, rec.AppointmentID, rec.PatientID, rec.DoctorID, rec.Symptoms, rec.Diagnosis, rec.Prescription, rec.Notes, now)
 	if err != nil {

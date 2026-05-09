@@ -5,6 +5,14 @@ import (
 	"telemedicine-api/model"
 )
 
+type ISlotRepository interface {
+	Create(slot model.Slot) (model.Slot, error)
+	GetAvailableByDoctorID(doctorID string) ([]model.Slot, error)
+	DeleteByID(id string) (int64, error)
+	GetByID(id uint) (model.Slot, error)
+	UpdateIsBooked(id uint, isBooked bool) error
+}
+
 type SlotRepository struct{}
 
 // Create slot
