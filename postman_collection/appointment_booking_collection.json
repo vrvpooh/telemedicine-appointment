@@ -1,0 +1,159 @@
+{
+	"info": {
+		"_postman_id": "7d9b7f5e-3e4a-4b5c-8d9e-1f2a3b4c5d6e",
+		"name": "Appointment Booking API",
+		"description": "Collection for testing the Appointment Booking feature in the Telemedicine API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Setup: Create Mock Slot",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if (jsonData.data && jsonData.data.id) {",
+							"    pm.collectionVariables.set(\"last_slot_id\", jsonData.data.id);",
+							"    console.log(\"Saved last_slot_id: \" + jsonData.data.id);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"doctor_id\": 1,\n    \"start_time\": \"2026-05-10 10:00\",\n    \"end_time\": \"2026-05-10 11:00\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/doctor/1/slots",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"doctor",
+						"1",
+						"slots"
+					]
+				},
+				"description": "Create a slot first. The script will automatically save the new ID to the 'last_slot_id' variable."
+			},
+			"response": []
+		},
+		{
+			"name": "Book Appointment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"patient_id\": 1,\n    \"slot_id\": {{target_slot_id}}\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/appointments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"appointments"
+					]
+				},
+				"description": "Book an appointment by manually specifying the slot ID in collection variables."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Zoom Token",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/appointments/1/zoom-token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"appointments",
+						"1",
+						"zoom-token"
+					]
+				},
+				"description": "Get the Zoom token for a specific appointment ID."
+			},
+			"response": []
+		},
+		{
+			"name": "Update Appointment Status",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"completed\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/appointments/1/status",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"appointments",
+						"1",
+						"status"
+					]
+				},
+				"description": "Update the status of an appointment."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/api",
+			"type": "string"
+		},
+		{
+			"key": "last_slot_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "target_slot_id",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}

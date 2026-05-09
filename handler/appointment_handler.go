@@ -8,9 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var appSvc *service.AppointmentService
+var appSvc service.IAppointmentService
 
-func SetupAppointmentHandler(s *service.AppointmentService) {
+func SetupAppointmentHandler(s service.IAppointmentService) {
 	appSvc = s
 }
 
@@ -68,10 +68,15 @@ func Update(c *gin.Context) {
 		return
 	}
 
-	if err := appSvc.UpdateStatus(uint(id), req.Status); err != nil {
+	app, err := appSvc.UpdateStatus(uint(id), req.Status)
+	if err != nil {
+		if err.Error() == "appointment not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Status updated successfully"})
+	c.JSON(http.StatusOK, app)
 }

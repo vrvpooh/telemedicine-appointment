@@ -120,14 +120,26 @@ func ConnectDatabase() {
     CREATE TABLE IF NOT EXISTS appointments (
         id          INTEGER PRIMARY KEY AUTOINCREMENT,
         patient_id  INTEGER NOT NULL,
-        slot_id     INTEGER NOT NULL,
+        slot_id     INTEGER NOT NULL UNIQUE,
         status      TEXT DEFAULT 'pending',
         zoom_token  TEXT,
-        created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+        created_at  TEXT NOT NULL,
+        updated_at  TEXT NOT NULL
     );
     `
 	if _, err := db.Exec(schemaAppointments); err != nil {
 		log.Fatal("สร้างตาราง appointments ไม่สำเร็จ:", err)
+	}
+
+	// สร้าง Unique Index เพื่อป้องกันการจองซ้ำสำหรับตารางที่มีอยู่แล้ว
+	_, _ = db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_appointments_slot_id ON appointments(slot_id);")
+
+
+	// Ensure updated_at exists (in case table was created before the schema update)
+	if _, err := db.Exec("ALTER TABLE appointments ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP;"); err != nil {
+		log.Println("Note: ALTER TABLE appointments (updated_at) might have already run or failed:", err)
+	} else {
+		log.Println("Successfully added updated_at column to appointments table.")
 	}
 
 	// users Authentication (Beer)

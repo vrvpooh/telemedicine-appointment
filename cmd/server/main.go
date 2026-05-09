@@ -26,7 +26,7 @@ func main() {
 
 	// Setup Appointment module
 	appRepo := &repository.AppointmentRepository{}
-	appService := &service.AppointmentService{Repo: appRepo, SlotRepo: slotRepo}
+	appService := &service.AppointmentService{DB: config.DB, Repo: appRepo, SlotRepo: slotRepo}
 	handler.SetupAppointmentHandler(appService)
 
 	// Setup Notification
