@@ -5,6 +5,12 @@ import (
 	"telemedicine-api/model"
 )
 
+type DoctorRepositoryInterface interface {
+	GetAll(name, specialty string) ([]model.Doctor, error)
+	GetByID(id string) (*model.Doctor, error)
+	GetSpecialties() ([]model.Specialty, error)
+}
+
 type DoctorRepository struct{}
 
 // GET all doctors
@@ -37,6 +43,10 @@ func (r *DoctorRepository) GetAll(name, specialty string) ([]model.Doctor, error
 			return nil, err
 		}
 		doctors = append(doctors, d)
+	}
+
+	if doctors == nil {
+		doctors = []model.Doctor{}
 	}
 
 	return doctors, nil
