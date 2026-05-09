@@ -8,8 +8,15 @@ import (
 	"telemedicine-api/repository"
 )
 
+// Interface สำหรับ handler ใช้ mock -> test ได้
+type ISlotService interface {
+	CreateSlot(doctorID int64, slot model.Slot) (model.Slot, error)
+	GetAvailableSlots(doctorID string) ([]model.Slot, error)
+	DeleteSlot(id string) (int64, error)
+}
+
 type SlotService struct {
-	Repo *repository.SlotRepository
+	Repo repository.ISlotRepository
 }
 
 const slotTimeLayout = "2006-01-02 15:04"

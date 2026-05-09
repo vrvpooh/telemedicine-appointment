@@ -10,10 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var SlotSvc *service.SlotService
+var SlotSvc service.ISlotService
 
 // SetupSlotHandler
-func SetupSlotHandler(svc *service.SlotService) {
+func SetupSlotHandler(svc service.ISlotService) {
 	SlotSvc = svc
 }
 
