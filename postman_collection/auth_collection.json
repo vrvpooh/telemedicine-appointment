@@ -1,0 +1,163 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+		"name": "Telemedicine Auth API (History Saved)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Register (Auto-Random)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// สุ่มอีเมลและเซฟเป็นตัวแปรปัจจุบัน",
+							"const randomEmail = pm.variables.replaceIn('{{$randomEmail}}');",
+							"pm.collectionVariables.set(\"current_email\", randomEmail);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"email\": \"{{current_email}}\",\n    \"password\": \"password123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/auth/register",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. Login (Save to History)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Login Success\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json();",
+							"    ",
+							"    if (jsonData.token) {",
+							"        // 1. เซฟ Token ปัจจุบันไว้ใช้ยิง Get Me",
+							"        pm.collectionVariables.set(\"current_token\", jsonData.token);",
+							"        ",
+							"        // 2. ดึงประวัติเก่าออกมา (ถ้ามี)",
+							"        var historyStr = pm.collectionVariables.get(\"token_history\");",
+							"        var history = [];",
+							"        if (historyStr) {",
+							"            try { history = JSON.parse(historyStr); } catch(e) {}",
+							"        }",
+							"        ",
+							"        // 3. เพิ่มข้อมูลคนใหม่เข้าไปในประวัติ",
+							"        history.push({",
+							"            email: pm.collectionVariables.get(\"current_email\"),",
+							"            token: jsonData.token,",
+							"            created_at: new Date().toLocaleString()",
+							"        });",
+							"        ",
+							"        // 4. เซฟประวัติกลับเข้าตัวแปร",
+							"        pm.collectionVariables.set(\"token_history\", JSON.stringify(history));",
+							"        console.log(\"Saved to history! Total users: \" + history.length);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{current_email}}\",\n    \"password\": \"password123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/auth/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Get Me (Check Profile)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{current_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/users/me",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "current_email",
+			"value": ""
+		},
+		{
+			"key": "current_token",
+			"value": ""
+		},
+		{
+			"key": "token_history",
+			"value": "[]"
+		}
+	]
+}
