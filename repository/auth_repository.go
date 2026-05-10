@@ -4,16 +4,19 @@ import (
 	"database/sql"
 	"telemedicine-api/config"
 	"telemedicine-api/model"
+	"time"
 )
 
 type AuthRepository struct{}
 
 func (r *AuthRepository) CreateUser(user *model.User) error {
-	query := `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`
-	result, err := config.DB.Exec(query, user.Name, user.Email, user.Password)
+	user.CreatedAt = time.Now().Format(time.RFC3339)
+	query := `INSERT INTO users (name, email, password, created_at) VALUES (?, ?, ?, ?)`
+	result, err := config.DB.Exec(query, user.Name, user.Email, user.Password, user.CreatedAt)
 	if err != nil {
 		return err
 	}
+
 	id, err := result.LastInsertId()
 	if err == nil {
 		user.ID = int(id)
