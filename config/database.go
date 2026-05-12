@@ -10,7 +10,7 @@ import (
 var DB *sql.DB
 
 func ConnectDatabase() {
-	db, err := sql.Open("sqlite3", "./telemedicine.db")
+	db, err := sql.Open("sqlite3", "/root/data/telemedicine.db")
 	if err != nil {
 		log.Fatal("เปิด database ไม่ได้:", err)
 	}
