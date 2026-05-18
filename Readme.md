@@ -1,62 +1,84 @@
-# Telemedicine & Appointment System 
+# 🏥 Telemedicine Appointment System
 
-ระบบที่ให้บริการจัดการนัดหมายระหว่างผู้ป่วยและแพทย์ 
-
----
-## Features
-- ระบบจัดการผู้ใช้ 
-
-- ระบบค้นหาเเละข้อมูลเเพทย์ 
-
-- ระบบจัดการตารางเวลา 
-
-- การจองเเละออกตั๋ว 
-
-- ระบบบันทึกผลตรวจ 
-
-- ระบบเเจ้งเตือนเเละประเมินผล 
+ระบบสำหรับจัดการนัดหมายแพทย์ (Telemedicine) พัฒนาโดยใช้ Go + SQLite พร้อมรองรับการรันผ่าน Docker
 
 ---
-## Members
-### 1) นาย กษิดิศ คงประพันธ์ (6609650129) 
-- ทำเรื่อง: ระบบเเจ้งเตือนเเละประเมินผล 
+
+## 📌 Features
+
+- ระบบจัดการผู้ใช้
+- ระบบค้นหาเเละข้อมูลเเพทย์
+- ระบบจัดการตารางเวลา
+- การจองเเละออกตั๋ว
+- ระบบบันทึกผลตรวจ
+- ระบบเเจ้งเตือนเเละประเมินผล
+
+
+
+---
+
+## 🛠 Tech Stack
+
+- **Backend:** Go (Golang)
+- **Database:** SQLite3
+- **Container:** Docker
+
+---
+
+## 📂 Project Structure
 ```bash
-GET /api/notification
-POST /api/feedback
-PATCH /api/admin/verify-doctor/{id}
+telemedicine-appointment/
+│── cmd/server
+    └── main.go
+│── database/
+│── repository/
+│── handler/
+│── model/
+│── Dockerfile
+│── go.mod
+│── README.md
 ```
-### 2) นาย กฤตชญา กลิ่นเดช (6609650160)
-- ทำเรื่อง: ระบบจัดการผู้ใช้
+
+---
+
+## ⚙️ วิธีติดตั้งและรัน (Local)
+
+### 1. Clone โปรเจกต์
+
 ```bash
-POST /api/auth/register
-POST /api/auth/login
-GET /api/users/me
+git clone https://github.com/vrvpooh/telemedicine-appointment.git
+cd telemedicine-appointment
 ```
-### 3) นาย ณัฐนันท์ ชูดวง (6609650368)
-- ทำเรื่อง: ระบบบันทึกผลตรวจ
+
+### 2. ติดตั้ง dependencies
 ```bash
-POST /api/records
-GET /api/records/patient/me
-GET /api/records/{id}
+go mod tidy
 ```
-### 4) นาย นนท์นริฐ รามณีย์กุลธวัช (6609650459)
-- ทำเรื่อง: การจองเเละออกตั๋ว
+
+### 3. รันโปรแกรม
 ```bash
-POST /api/appointments
-GET /api/appointments/{id}/zoom-token
-PATCH /api/appointments/{id}/status
+go run cmd/server/main.go
 ```
-### 5) นาย วรวีร์ นุชธิสาร (6609650640)
-- ทำเรื่อง: ระบบค้นหาเเละข้อมูลเเพทย์
+
+### 4. เข้าใช้งาน
 ```bash
-GET /api/doctors
-GET /api/doctors/{id}
-GET /api/specialties
+http://localhost:8080
 ```
-### 6) นาย ศุภกฤต ธรรมางกูร (6609650657)
-- ทำเรื่อง: ระบบจัดการตารางเวลา
+
+### 🐳 วิธีใช้งาน Docker
+## 1. Build Docker Image
 ```bash
-POST /api/{id}/slots
-GET /api/doctor/{id}/slots
-DELETE /api/slots/{id}
+docker build -t telemedicine-api .
 ```
+## 2. รัน Container
+
+👉 สำหรับ PowerShell (Windows)
+```bash
+docker run -p 8080:8080 -v ${PWD}/data:/root/data telemedicine-api
+```
+
+👉 สำหรับ Mac / Linux
+```bash
+docker run -p 8080:8080 -v $(pwd)/data:/root/data telemedicine-api
+```
+
