@@ -3,6 +3,7 @@ package config
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -10,7 +11,14 @@ import (
 var DB *sql.DB
 
 func ConnectDatabase() {
-	db, err := sql.Open("sqlite3", "/root/data/telemedicine.db")
+	// Docker: set DB_PATH=/root/data/telemedicine.db
+	// Local:  ใช้ telemedicine.db ที่ root ของ project (ใช้สำหรับ unit test)
+	dbPath := os.Getenv("DB_PATH")
+	if dbPath == "" {
+		dbPath = "telemedicine.db"
+	}
+
+	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		log.Fatal("เปิด database ไม่ได้:", err)
 	}
@@ -173,5 +181,5 @@ func ConnectDatabase() {
 	}
 
 	DB = db
-	log.Println("เชื่อมต่อ SQLite สำเร็จ -> telemedicine.db")
+	log.Println("เชื่อมต่อ SQLite สำเร็จ ->", dbPath)
 }

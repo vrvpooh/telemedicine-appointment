@@ -6,6 +6,8 @@ services:
     container_name: telemedicine-api
     ports:
       - "8080:8080"
+    environment:
+      - DB_PATH=/root/data/telemedicine.db
     volumes:
       - ./data:/root/data
     restart: always
