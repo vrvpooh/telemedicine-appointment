@@ -110,6 +110,11 @@ docker compose down
 go test ./...
 ```
 
+### Run Unit Test เฉพาะส่วน service (Business logic)
+```bash
+go test ./service/... -cover
+```
+
 ### สร้างไฟล์ Coverage
 ```bash
 go test ./... -coverprofile=coverage.out
