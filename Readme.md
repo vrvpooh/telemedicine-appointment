@@ -43,9 +43,10 @@ telemedicine-appointment/
 ├── postman_collection/          # Postman API test collection
 ├── Dockerfile                   # Docker image configuration
 ├── docker-compose.yml           # Docker Compose configuration
+├── Unit_Test_Report.md          # Unit test report (service layer)
 ├── go.mod
 ├── go.sum
-└── README.md
+└── Readme.md
 ```
 
 ---
