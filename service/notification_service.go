@@ -2,13 +2,18 @@ package service
 
 import (
 	"telemedicine-api/model"
-	"telemedicine-api/repository"
 )
 
+
+type NotificationRepositoryInterface interface {
+	GetNotifications(userID int) ([]model.Notification, error)
+}
+
 type NotificationService struct {
-    Repo *repository.NotificationRepository
+
+	Repo NotificationRepositoryInterface
 }
 
 func (s *NotificationService) GetUserNotifications(userID int) ([]model.Notification, error) {
-    return s.Repo.GetNotifications(userID)
+	return s.Repo.GetNotifications(userID)
 }

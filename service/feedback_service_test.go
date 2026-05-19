@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// Mock สำหรับ Feedback และ Verify
+
 type MockFeedbackRepo struct {
 	CreateFeedbackFunc func(f model.Feedback) error
 	VerifyDoctorFunc   func(id string, status bool) error
@@ -26,8 +26,10 @@ func TestSubmitFeedback_Success(t *testing.T) {
 		},
 	}
 
-	// ทดสอบ Logic การเรียกใช้
-	err := mockRepo.CreateFeedback(model.Feedback{Rating: 5})
+	
+	svc := &FeedbackService{Repo: mockRepo}
+
+	err := svc.SubmitFeedback(model.Feedback{Rating: 5})
 	if err != nil {
 		t.Errorf("expected nil, got %v", err)
 	}
@@ -40,7 +42,9 @@ func TestVerifyDoctorStatus_Error(t *testing.T) {
 		},
 	}
 
-	err := mockRepo.VerifyDoctor("999", true)
+	svc := &FeedbackService{Repo: mockRepo}
+
+	err := svc.VerifyDoctorStatus("999", true)
 	if err == nil {
 		t.Error("expected error, got nil")
 	}

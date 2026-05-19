@@ -22,12 +22,12 @@ func TestGetUserNotifications_Success(t *testing.T) {
 	}
 
 
-	
 	svc := &NotificationService{
-		Repo: nil,
+		Repo: mockRepo,
 	}
 
-	data, err := mockRepo.GetNotifications(1)
+
+	data, err := svc.GetUserNotifications(1)
 	
 	if err != nil {
 		t.Errorf("expected no error, got %v", err)
@@ -35,9 +35,6 @@ func TestGetUserNotifications_Success(t *testing.T) {
 	if len(data) != 1 {
 		t.Errorf("expected 1 item, got %d", len(data))
 	}
-
-	
-	_ = svc 
 }
 
 func TestGetUserNotifications_Error(t *testing.T) {
@@ -47,7 +44,13 @@ func TestGetUserNotifications_Error(t *testing.T) {
 		},
 	}
 
-	_, err := mockRepo.GetNotifications(1)
+
+	svc := &NotificationService{
+		Repo: mockRepo,
+	}
+
+
+	_, err := svc.GetUserNotifications(1)
 	if err == nil {
 		t.Error("expected error, got nil")
 	}

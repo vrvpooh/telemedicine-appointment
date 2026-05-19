@@ -48,6 +48,7 @@ func ConnectDatabase() {
 		education TEXT,
 		experience INTEGER,
 		rating REAL
+		is_verified INTEGER DEFAULT 0
 	);
 	`
 	// Notification & Feedback (Tum)
